@@ -1,0 +1,60 @@
+image: openjdk:11-jdk-slim
+
+stages:
+  - build
+  - test
+  - publish
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+variables:
+  GIT_STRATEGY: clone
+  GIT_SUBMODULE_STRATEGY: recursive
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+build:
+  stage: build
+  script:
+    - ./gradlew build
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+  tags:
+    - coinmetrics-build-runner
+  cache:
+    key: "$CI_COMMIT_SHORT_SHA"
+    policy: push
+    paths:
+      - build
+      - .gradle
+
+test:
+  tags:
+    - coinmetrics-build-runner
+  stage: test
+  script:
+    - ./gradlew test
+  cache:
+    key: "$CI_COMMIT_SHORT_SHA"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+
+publish:
+  tags:
+    - coinmetrics-build-runner
+  stage: publish
+  script:
+    - ./gradlew publish
+  cache:
+    key: "$CI_COMMIT_SHORT_SHA"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+  only:
+    - master
+  when: manual
