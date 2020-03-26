@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        akka_version = "2.6.3"
+        akka_version = "2.6.4"
         akka_http_version = "10.1.11"
     }
 }
@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'io.coinmetrics'
-version '1.0.2'
+version '1.0.4'
 
 repositories {
     jcenter()
@@ -39,12 +39,10 @@ compileTestKotlin {
 
 
 dependencies {
-    implementation platform('org.jetbrains.kotlin:kotlin-bom')
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 
     // akka
-    implementation "com.typesafe.akka:akka-actor-typed_2.13:$akka_version"
-    implementation "com.typesafe.akka:akka-stream-typed_2.13:$akka_version"
+    implementation "com.typesafe.akka:akka-stream_2.13:$akka_version"
     implementation "com.typesafe.akka:akka-http_2.13:$akka_http_version"
     implementation "com.typesafe.akka:akka-http-jackson_2.13:$akka_http_version"
 
