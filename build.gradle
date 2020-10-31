@@ -1,18 +1,18 @@
 buildscript {
     ext {
-        akka_version = "2.6.8"
-        akka_http_version = "10.2.0"
+        akka_version = "2.6.10"
+        akka_http_version = "10.2.1"
     }
 }
 
 plugins {
     id 'java-library'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
     id 'maven-publish'
 }
 
 group 'io.coinmetrics'
-version '1.0.7'
+version '1.0.8'
 
 repositories {
     jcenter()
