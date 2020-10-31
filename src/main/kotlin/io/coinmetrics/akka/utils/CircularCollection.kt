@@ -102,12 +102,22 @@ class CircularHashMap<K, V>(val capacity: Int) : CircularMap<K, V> {
     override fun size(): Int = map.size
 
     // clear
-    override fun clear() = map.clear()
+    override fun clear() {
+        map.clear()
+        n = 0
+        arr.fill(null)
+    }
 
     // fold values
     override fun <R> foldValues(initial: R, operation: (acc: R, V) -> R): R {
         var acc = initial
-        map.values.forEach { acc = operation(acc, it) }
+        (n until n + capacity).forEach { i ->
+            val key = arr[(n + i) % capacity]
+            key?.let {
+                val value = map.getValue(it)
+                acc = operation(acc, value)
+            }
+        }
         return acc
     }
 
