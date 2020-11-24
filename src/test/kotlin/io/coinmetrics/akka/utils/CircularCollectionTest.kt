@@ -41,4 +41,16 @@ class CircularCollectionTest: Assertions() {
         assertNull(list.firstOrNull { it == 3 })
 
     }
+
+    @Test
+    fun `list first or null`() {
+        val list = CircularArrayList<Pair<Char, Int>>(3)
+        list.put('A' to  1)
+        assertEquals(1, list.firstOrNull { it.first == 'A' }?.second)
+        list.put('B' to  1)
+        assertEquals(1, list.firstOrNull { it.first == 'A' }?.second)
+        list.put('A' to  2)
+        assertEquals(2, list.firstOrNull { it.first == 'A' }?.second)
+    }
+
 }

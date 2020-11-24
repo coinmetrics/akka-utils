@@ -37,7 +37,10 @@ class CircularArrayList<V>(val capacity: Int): CircularList<V> {
     override fun <R> fold(initial: R, operation: (R, V) -> R): R = arr.fold(initial, operation)
 
     override fun firstOrNull(p: (V) -> Boolean): V? {
-        for(e in arr) { if (e != null && p(e)) return e }
+        for(i in n + 1..n + capacity) {
+            val e = arr[i % capacity]
+            if (e != null && p(e)) return e
+        }
         return null
     }
 }
