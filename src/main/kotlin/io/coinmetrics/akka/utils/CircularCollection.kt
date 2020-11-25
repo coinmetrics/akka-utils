@@ -7,6 +7,7 @@ package io.coinmetrics.akka.utils
 
 interface CircularList<V> {
     fun put(v: V): V?
+    fun putOver(v: V)
     fun newest(): V?
     fun oldest(): V?
     fun <R> fold(initial: R, operation: (acc: R, V) -> R): R
@@ -28,6 +29,10 @@ class CircularArrayList<V>(val capacity: Int): CircularList<V> {
         arr[n] = v
         n = (n + 1) % capacity
         return last
+    }
+
+    override fun putOver(v: V) {
+        arr[(n + capacity - 1) % capacity] = v
     }
 
     override fun newest() = arr[(n + capacity - 1) % capacity]

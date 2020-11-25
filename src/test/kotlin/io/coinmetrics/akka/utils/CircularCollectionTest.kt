@@ -51,6 +51,11 @@ class CircularCollectionTest: Assertions() {
         assertEquals(1, list.firstOrNull { it.first == 'A' }?.second)
         list.put('A' to  2)
         assertEquals(2, list.firstOrNull { it.first == 'A' }?.second)
+
+        assertEquals(2, list.newest().second)
+        list.putOver('A' to  3)
+        assertEquals(3, list.newest().second)
+        assertEquals(1, list.oldest().second)
     }
 
 }
