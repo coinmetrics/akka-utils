@@ -51,10 +51,20 @@ class CircularCollectionTest: Assertions() {
         assertEquals(1, list.firstOrNull { it.first == 'A' }?.second)
         list.put('A' to  2)
         assertEquals(2, list.firstOrNull { it.first == 'A' }?.second)
+        assertEquals(2, list.newest().second)
+    }
 
+    @Test
+    fun `put over`() {
+        val list = CircularArrayList<Pair<Char, Int>>(3)
+        list.putOver('A' to  1)
+        assertEquals(1, list.newest().second)
+        list.put('A' to 2)
         assertEquals(2, list.newest().second)
         list.putOver('A' to  3)
         assertEquals(3, list.newest().second)
+        list.put('A' to 4)
+        assertEquals(8, list.fold(0) { acc, e -> acc + e.second })
         assertEquals(1, list.oldest().second)
     }
 

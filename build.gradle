@@ -1,33 +1,21 @@
 buildscript {
     ext {
-        akka_version = "2.6.10"
-        akka_http_version = "10.2.1"
+        akka_version = "2.6+"
+        akka_http_version = "10+"
+        jackson_version = "2.13.1"
     }
 }
 
 plugins {
-    id 'java-library'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'maven-publish'
 }
 
-group 'io.coinmetrics'
-version '1.0.10'
+version '1.1.1'
 
 repositories {
     jcenter()
     mavenCentral()
-}
-
-sourceSets {
-    main {
-        kotlin {
-            srcDir 'src/main/kotlin'
-        }
-        resources {
-            srcDirs = ['src/main/resources', 'resources']
-        }
-    }
 }
 
 compileKotlin {
@@ -39,7 +27,13 @@ compileTestKotlin {
 
 
 dependencies {
+
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+    // jackson
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jackson_version"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"
 
     // akka
     implementation "com.typesafe.akka:akka-stream_2.13:$akka_version"
@@ -60,43 +54,40 @@ test {
 
 
 task sourceJar(type: Jar, dependsOn: classes) {
-    archiveClassifier = 'sources'
+    classifier 'sources'
     from sourceSets.main.kotlin
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = 'javadoc'
+    classifier 'javadoc'
     from javadoc.destinationDir
 }
 
-tasks.withType(Jar) {
-    archivesBaseName = "akka-utils"
-}
 
 publishing {
 
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            groupId "io.coinmetrics"
-            artifactId "akka-utils"
+            groupId 'io.coinmetrics'
+            artifactId 'akka-utils'
             version version
             pom {
                 name = 'Kotlin Akka Library'
                 description = 'Useful utility classes'
             }
             artifact sourceJar {
-                classifier "sources"
+                classifier 'sources'
             }
             artifact javadocJar {
-                classifier "javadoc"
+                classifier 'javadoc'
             }
         }
     }
 
     repositories {
         maven {
-            url "https://gitlab.com/api/v4/projects/16995897/packages/maven"
+            url "https://gitlab.com/api/v4/projects/31574851/packages/maven"
             credentials(HttpHeaderCredentials) {
                 if (System.env["CI_JOB_TOKEN"] != null) {
                     name = "Job-Token"
@@ -111,7 +102,6 @@ publishing {
             }
         }
     }
-
 }
 
 

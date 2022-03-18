@@ -13,17 +13,14 @@ import akka.stream.javadsl.Sink
 import akka.stream.javadsl.Source
 import akka.util.ByteString
 import io.coinmetrics.akka.utils.toPair
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletionStage
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletionStage
 import akka.japi.Pair as AkkaPair
 
-class HttpRequestPool(val host: String, val queueSize: Int, val system: ExtendedActorSystem, val secure: Boolean = false) {
-
-    val maxResponseTime = 0x4000L
-    val maxResponseSize = 0x40000L
+class HttpRequestPool(host: String, queueSize: Int, system: ExtendedActorSystem, val secure: Boolean = false, val maxResponseTime: Long = 60 * 1000, val maxResponseSize: Long = 256 * 1024) {
 
     private val poolClientFlow = if (secure) Http(system).cachedHostConnectionPoolHttps<CompletableFuture<ByteString>>(ConnectHttp.toHostHttps(host))
         else Http(system).cachedHostConnectionPool<CompletableFuture<ByteString>>(ConnectHttp.toHost(host))
