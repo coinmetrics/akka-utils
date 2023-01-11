@@ -1,7 +1,7 @@
 buildscript {
     ext {
         akka_version = "2.6+"
-        akka_http_version = "10.2.1"
+        akka_http_version = "10.2.10"
         jackson_version = "2.13.1"
     }
 }
