@@ -1,9 +1,8 @@
 /*
- * Copyright (c) 2020. Coin Metrics Inc.
+ * Copyright (c) 2022. Coin Metrics Inc.
  */
 
 package io.coinmetrics.akka.utils
-
 
 interface CircularList<V> {
     fun put(v: V): V?
@@ -14,8 +13,7 @@ interface CircularList<V> {
     fun firstOrNull(p: (V) -> Boolean): V?
 }
 
-
-class CircularArrayList<V>(val capacity: Int): CircularList<V> {
+class CircularArrayList<V>(val capacity: Int) : CircularList<V> {
 
     // pointer
     private var n = 0
@@ -42,15 +40,13 @@ class CircularArrayList<V>(val capacity: Int): CircularList<V> {
     override fun <R> fold(initial: R, operation: (R, V) -> R): R = arr.fold(initial, operation)
 
     override fun firstOrNull(p: (V) -> Boolean): V? {
-        for(i in n + 1..n + capacity) {
+        for (i in n + 1..n + capacity) {
             val e = arr[i % capacity]
             if (e != null && p(e)) return e
         }
         return null
     }
 }
-
-
 
 /**
  * Circular buffer with HashMap
@@ -76,7 +72,8 @@ interface CircularMap<K, V> {
     fun <R> foldValues(initial: R, operation: (acc: R, V) -> R): R
 }
 
-class CircularHashMap<K, V>(val capacity: Int) : CircularMap<K, V> {
+class CircularHashMap<K, V>(val capacity: Int, private val map: MutableMap<K, V> = HashMap(capacity)) :
+    CircularMap<K, V> {
 
     // pointer
     private var n = 0
@@ -84,9 +81,6 @@ class CircularHashMap<K, V>(val capacity: Int) : CircularMap<K, V> {
     // array
     @Suppress("UNCHECKED_CAST")
     private val arr: Array<K?> = arrayOfNulls<Any?>(capacity) as Array<K?>
-
-    // HashMap
-    private val map = HashMap<K, V>(capacity)
 
     override fun put(k: K, v: V): V? {
         // just return if same key
@@ -128,5 +122,4 @@ class CircularHashMap<K, V>(val capacity: Int) : CircularMap<K, V> {
         }
         return acc
     }
-
 }
