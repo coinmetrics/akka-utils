@@ -21,7 +21,7 @@ class HttpRequestStream(val system: ActorSystem) {
     val http = Http.get(system)
     fun executeRequest(request: HttpRequest, maxRestarts: Int = 1): CompletionStage<Response> {
         val logSettings = RestartSettings.`LogSettings$`.`MODULE$`.defaultSettings()
-        val restartSettings = RestartSettings(minDelay, maxDelay, 0.1, maxRestarts, totalDelay, logSettings)
+        val restartSettings = RestartSettings(minDelay, maxDelay, 0.1, maxRestarts, totalDelay, logSettings) { _ -> false }
         val mat = Materializer.matFromSystem(system)
         val src = Source.single(request)
             .mapAsync(1) { req -> http.singleRequest(req) }
